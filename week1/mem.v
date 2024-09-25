@@ -8,7 +8,7 @@ module mem(
     output reg [7:0] Dataout
     );
 
-    reg [7:0] A [0:10];
+    reg [7:0] A [0:15];
    
     always @(posedge clk)
     begin
@@ -24,24 +24,22 @@ module mem(
             A[7] <= 8'b0;
             A[8] <= 8'b0;
             A[9] <= 8'b0;
+            A[10] <= 8'b0;
+            A[11] <= 8'b0;
+            A[12] <= 8'b0;
+            A[13] <= 8'b0;
+            A[14] <= 8'b0;
+            A[15] <= 8'b0;
             Dataout <= 8'b0;  
         end
         else
         begin
-            case ({wr, rd})
-                2'b10:
-                begin
-                    A[Addr] <= Datain;
-                end
-                2'b01:
-                begin
-                    Dataout <= A[Addr];
-                end
-                default:
-                begin
-                    Dataout <= 8'bz;
-                end
-            endcase
+            if (wr)
+                A[Addr] <= Datain;  // Write to memory
+            else if (rd)
+                Dataout <= A[Addr]; // Read from memory
+            else
+                Dataout <= 8'bz;
         end
     end
 endmodule
